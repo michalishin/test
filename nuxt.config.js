@@ -1,6 +1,5 @@
+const { resolve } = require('path')
 // const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
-
 module.exports = {
   /*
   ** Headers of the page
@@ -19,7 +18,7 @@ module.exports = {
   },
 
   css: [
-    './assets/styles/app.css'
+    {src: '~assets/styles/app.sass',lang: 'sass'}
   ],
   /*
   ** Customize the progress bar color
@@ -35,7 +34,8 @@ module.exports = {
     //   analyzerPort: 3001
     // },
     vendor: [
-      './assets/styles/app.css'
+      './assets/styles/app.sass',
+      'axios'
     ],
     /*
     ** Run ESLint on save

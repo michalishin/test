@@ -1,54 +1,39 @@
-<template>
-  <div class="w-full max-w-xs">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <div class="mb-4">
-        <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
-          Username
-        </label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker leading-tight" id="username" type="text" placeholder="Username">
-      </div>
-      <!--<div class="mb-6">-->
-        <!--<label class="block text-grey-darker text-sm font-bold mb-2" for="password">-->
-          <!--Password-->
-        <!--</label>-->
-        <!--<input class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3 leading-tight" id="password" type="password" placeholder="******************">-->
-        <!--<p class="text-red text-xs italic">Please choose a password.</p>-->
-      <!--</div>-->
-      <base-form-item class="mb-6">
-        <base-input type="password" placeholder="******************">
-
-        </base-input>
-      </base-form-item>
-      <div class="flex items-center justify-between">
-        <button class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" type="button">
-          Sign In
-        </button>
-        <a class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker" href="#">
-          Forgot Password?
-        </a>
-      </div>
-    </form>
-    <p class="text-center text-grey text-xs">
-      ©2018 Acme Corp. All rights reserved.
-    </p>
-  </div>
+<template lang="pug">
+  div.login
+    div.box
+      div.logo
+      form.login-form
+        base-form-item.user-input(label="Логин" name="username")
+          base-input(v-model="login")
+        base-form-item.password-input(label="Пароль" name="password")
+          base-input(type="password" placeholder="******************" v-model="password")
+        div.buttons-wrap
+          base-button(@click="submit", v-loading="inLogin") Вход
+    p.copiright ©2018 Creditexpress. All rights reserved.
 </template>
 
 <script>
   import Cookie from 'js-cookie'
+  import authService from '~/services/auth'
 
   export default {
     middleware: 'notAuthenticated',
+    layout: 'centered',
+    data () {
+      return {
+        login: '',
+        password: '',
+        inLogin: false
+      }
+    },
     methods: {
-      postLogin () {
-        setTimeout(() => {
-          const auth = {
-            accessToken: 'someStringGotFromApiServiceWithAjax'
-          }
-          this.$store.commit('update', auth) // mutating to store for client rendering
-          Cookie.set('auth', auth) // saving token in cookie for server rendering
-          this.$router.push('/')
-        }, 1000)
+      async submit () {
+        this.inLogin = true
+        const auth = await authService.login(this.login, this.password)
+        this.$store.commit('update', auth) // mutating to store for client rendering
+        Cookie.set('auth', auth) // saving token in cookie for server rendering
+        this.$router.push('/')
+        this.inLogin = false
       }
     }
   }

@@ -1,19 +1,25 @@
-<template>
-  <div>
-    <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
-      Password
-    </label>
-    <slot></slot>
-    <p class="text-red text-xs italic" v-if="error">
-      {{error}}
-    </p>
-  </div>
+<template lang="pug">
+div.form-item
+  label.label(:for="name" v-if="label" v-text="label")
+  slot
+  p.info(v-if="error" v-text="error")
 </template>
 
 <script>
   export default {
     props: {
-      error: {}
+      error: {},
+      label: {
+        default: null
+      },
+      name: {
+        default: null
+      }
+    },
+    provide () {
+      return {
+        name: this.name
+      }
     }
   }
 </script>

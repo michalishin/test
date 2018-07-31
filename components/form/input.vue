@@ -1,13 +1,16 @@
-<template>
-  <input class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3 leading-tight"
-           @input="$emit('input', value)"
-           :value="value"
-           :type="type"
-           :placeholder="placeholder">
+<template lang="pug">
+input.input(
+  @input="change"
+  :name="name"
+  :value="value"
+  :type="type"
+  :placeholder="placeholder"
+  )
 </template>
 
 <script>
   export default {
+    inject: ['name'],
     props: {
       error: {},
       value: {},
@@ -16,6 +19,11 @@
       },
       placeholder: {
         default: ''
+      }
+    },
+    methods: {
+      change (e) {
+        this.$emit('input', e.target.value)
       }
     }
   }
